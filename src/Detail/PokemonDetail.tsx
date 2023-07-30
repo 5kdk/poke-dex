@@ -6,6 +6,7 @@ import {
 } from '../Service/pokemonService';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { PokeImageSkeleton } from '../Common/PokeImageSkeleton';
 
 const PokemonDetail = () => {
   const [pokemon, setPokemon] = useState<PokemonDetailType | null>(null);
@@ -24,7 +25,17 @@ const PokemonDetail = () => {
   }, [name]);
 
   if (!name || !pokemon) {
-    return null;
+    return (
+      <Container>
+        <ImageContainer>
+          <PokeImageSkeleton />
+        </ImageContainer>
+        <Divider />
+        <Footer>
+          <PokeMarkChip />
+        </Footer>
+      </Container>
+    );
   }
 
   return (
@@ -98,6 +109,7 @@ const ImageContainer = styled.section`
   justify-content: center;
   align-items: center;
   margin: 8px 0;
+  min-height: 350px;
 `;
 
 const Image = styled.img`

@@ -7,6 +7,7 @@ import {
   PokemonDetailType,
   fetchPokemonsDetail,
 } from '../Service/pokemonService';
+import { PokeImageSkeleton } from '../Common/PokeImageSkeleton';
 
 interface PokeCardProps {
   name: string;
@@ -28,7 +29,19 @@ const PokeCard = (props: PokeCardProps) => {
   }, [props.name]);
 
   if (!pokemon) {
-    return null;
+    return (
+      <Item>
+        <Header>
+          <PokeNameChip name="포켓몬" id={0} color="#ffca09" />
+        </Header>
+        <Body>
+          <PokeImageSkeleton />
+        </Body>
+        <Footer>
+          <PokeMarkChip />
+        </Footer>
+      </Item>
+    );
   }
 
   return (
@@ -53,7 +66,7 @@ const PokeCard = (props: PokeCardProps) => {
   );
 };
 
-const Item = styled.li<{ color: string }>`
+const Item = styled.li<{ color?: string }>`
   display: flex;
   flex-direction: column;
   padding: 8px;
