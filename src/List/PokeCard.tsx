@@ -36,6 +36,18 @@ const Item = styled.li`
   height: 300px;
   border: 1px solid #c0c0c0;
   box-shadow: 1px 1px 3px 1px #c0c0c0;
+  cursor: pointer;
+  transition: transform 0.1s ease-in;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  &:active {
+    background-color: yellow;
+    opacity: 0.8;
+    transition: background-color 0s;
+  }
 `;
 
 const Header = styled.section`
