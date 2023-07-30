@@ -1,13 +1,20 @@
 import styled from '@emotion/styled';
 import PokeNameChip from '../Common/PokeNameChip';
 import PokeMarkChip from '../Common/PokeMarkChip';
+import { useNavigate } from 'react-router-dom';
 
 const tempUrl =
   'https://upload.wikimedia.org/wikipedia/ko/a/a6/Pok%C3%A9mon_Pikachu_art.png';
 
 const PokeCard = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/pokemon/이상해씨`);
+  };
+
   return (
-    <Item>
+    <Item onClick={handleClick}>
       <Header>
         <PokeNameChip />
       </Header>
