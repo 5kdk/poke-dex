@@ -2,9 +2,11 @@ import styled from '@emotion/styled';
 import PokeNameChip from '../Common/PokeNameChip';
 import PokeMarkChip from '../Common/PokeMarkChip';
 import { useNavigate } from 'react-router-dom';
-
-const tempUrl =
-  'https://upload.wikimedia.org/wikipedia/ko/a/a6/Pok%C3%A9mon_Pikachu_art.png';
+import { useEffect, useState } from 'react';
+import {
+  PokemonDetailType,
+  fetchPokemonsDetail,
+} from '../Service/pokemonService';
 
 interface PokeCardProps {
   name: string;
@@ -12,18 +14,33 @@ interface PokeCardProps {
 
 const PokeCard = (props: PokeCardProps) => {
   const navigate = useNavigate();
+  const [pokemon, setPokemon] = useState<PokemonDetailType | null>(null);
 
   const handleClick = () => {
     navigate(`/pokemon/${props.name}`);
   };
 
+  useEffect(() => {
+    (async () => {
+      const detail = await fetchPokemonsDetail(props.name);
+      setPokemon(detail);
+    })();
+  }, [props.name]);
+
+  if (!pokemon) {
+    return null;
+  }
+
   return (
     <Item onClick={handleClick}>
       <Header>
-        <PokeNameChip name={props.name} />
+        <PokeNameChip name={pokemon.name} id={pokemon.id} />
       </Header>
       <Body>
-        <Image src={tempUrl} alt="이상해씨 이미지" />
+        <Image
+          src={pokemon.images.officialArtworkFront}
+          alt={`${pokemon.name} image`}
+        />
       </Body>
       <Footer>
         <PokeMarkChip />

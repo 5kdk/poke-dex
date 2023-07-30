@@ -2,13 +2,19 @@ import styled from '@emotion/styled';
 
 interface PokeCardProps {
   name: string;
+  id: number;
 }
 
 const PokeNameChip = (props: PokeCardProps) => {
+  const renderNumber = (id: number) => {
+    const digit = 3;
+    return id.toString().padStart(digit, '0');
+  };
+
   return (
     <Chip>
       <NumberChip>
-        <Number>001</Number>
+        <Number>{renderNumber(props.id)}</Number>
       </NumberChip>
       <Text>{props.name}</Text>
     </Chip>
