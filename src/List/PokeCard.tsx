@@ -6,17 +6,21 @@ import { useNavigate } from 'react-router-dom';
 const tempUrl =
   'https://upload.wikimedia.org/wikipedia/ko/a/a6/Pok%C3%A9mon_Pikachu_art.png';
 
-const PokeCard = () => {
+interface PokeCardProps {
+  name: string;
+}
+
+const PokeCard = (props: PokeCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/pokemon/이상해씨`);
+    navigate(`/pokemon/${props.name}`);
   };
 
   return (
     <Item onClick={handleClick}>
       <Header>
-        <PokeNameChip />
+        <PokeNameChip name={props.name} />
       </Header>
       <Body>
         <Image src={tempUrl} alt="이상해씨 이미지" />
