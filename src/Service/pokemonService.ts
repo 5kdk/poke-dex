@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const remote = axios.create({ baseURL: 'https://pokeapi.co/api/v2/pokemon/' });
+const remote = axios.create({ baseURL: 'https://pokeapi.co/api/v2/' });
 
 export interface PokemonListResponseType {
   count: number;
@@ -12,7 +12,7 @@ export interface PokemonListResponseType {
 }
 
 export const fetchPokemons = async () => {
-  const response = await remote.get<PokemonListResponseType>('');
+  const response = await remote.get<PokemonListResponseType>('pokemon');
 
   return response.data;
 };
@@ -46,18 +46,32 @@ interface PokemonDetailResponseType {
   }[];
 }
 
+export interface pokemonSpeciesResponseType {
+  color: {
+    name: string;
+  };
+  names: {
+    name: string;
+    language: {
+      name: string;
+    };
+  }[];
+}
+
 export interface PokemonDetailType {
   id: number;
   weight: number;
   height: number;
   name: string;
+  koreanName: string;
+  color: string;
   types: string[];
   images: {
     frontDefault: string;
     dreamWorldFront: string;
     officialArtworkFront: string;
   };
-  baseStates: {
+  baseStats: {
     name: string;
     value: number;
   }[];
@@ -66,12 +80,27 @@ export interface PokemonDetailType {
 export const fetchPokemonsDetail = async (
   name: string
 ): Promise<PokemonDetailType> => {
-  const response = await remote.get<PokemonDetailResponseType>(`${name}`);
+  const pokemonDetailUrl = `pokemon/${name}`;
+  const pokemonSpeciesUrl = `pokemon-species/${name}`;
+
+  const response = await remote.get<PokemonDetailResponseType>(
+    pokemonDetailUrl
+  );
+  const speciesResponse = await remote.get<pokemonSpeciesResponseType>(
+    pokemonSpeciesUrl
+  );
+
   const detail = response.data;
+  const species = speciesResponse.data;
+  console.log(species);
 
   return {
     id: detail.id,
     name: detail.name,
+    koreanName:
+      species.names.find(item => item.language.name === 'ko')?.name ??
+      detail.name,
+    color: species.color.name,
     height: detail.height / 10,
     weight: detail.weight / 10,
     types: detail.types.map(item => item.type.name),
@@ -81,7 +110,7 @@ export const fetchPokemonsDetail = async (
       officialArtworkFront:
         detail.sprites.other['official-artwork'].front_default,
     },
-    baseStates: detail.stats.map(item => {
+    baseStats: detail.stats.map(item => {
       return { name: item.stat.name, value: item.base_stat };
     }),
   };

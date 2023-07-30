@@ -1,14 +1,39 @@
 import styled from '@emotion/styled';
 import PokeMarkChip from '../Common/PokeMarkChip';
-
-const tempUrl =
-  'https://upload.wikimedia.org/wikipedia/ko/a/a6/Pok%C3%A9mon_Pikachu_art.png';
+import {
+  PokemonDetailType,
+  fetchPokemonsDetail,
+} from '../Service/pokemonService';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const PokemonDetail = () => {
+  const [pokemon, setPokemon] = useState<PokemonDetailType | null>(null);
+
+  const { name } = useParams();
+
+  useEffect(() => {
+    if (!name) {
+      return;
+    }
+
+    (async () => {
+      const detail = await fetchPokemonsDetail(name);
+      setPokemon(detail);
+    })();
+  }, [name]);
+
+  if (!name || !pokemon) {
+    return null;
+  }
+
   return (
     <Container>
       <ImageContainer>
-        <Image src={tempUrl} alt="포켓몬 이미지" />
+        <Image
+          src={pokemon.images.officialArtworkFront}
+          alt={`${pokemon.koreanName} 이미지`}
+        />
       </ImageContainer>
       <Divider />
       <Body>
@@ -17,25 +42,37 @@ const PokemonDetail = () => {
           <tbody>
             <TableRow>
               <TableHeader>번호</TableHeader>
-              <td>1</td>
+              <td>{pokemon.id}</td>
             </TableRow>
             <TableRow>
               <TableHeader>이름</TableHeader>
-              <td>이상해씨</td>
+              <td>{`${pokemon.koreanName} (${pokemon.name})`}</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>타입</TableHeader>
+              <td>{pokemon.types.toString()}</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>키</TableHeader>
+              <td>{pokemon.height} m</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>몸무게</TableHeader>
+              <td>{pokemon.weight} kg</td>
             </TableRow>
           </tbody>
         </Table>
         <h2>능력치</h2>
         <Table>
           <tbody>
-            <TableRow>
-              <TableHeader>hp</TableHeader>
-              <td>1</td>
-            </TableRow>
-            <TableRow>
-              <TableHeader>attack</TableHeader>
-              <td>이상해씨</td>
-            </TableRow>
+            {pokemon.baseStats.map(stat => {
+              return (
+                <TableRow key={stat.name}>
+                  <TableHeader>{stat.name}</TableHeader>
+                  <td>{stat.value}</td>
+                </TableRow>
+              );
+            })}
           </tbody>
         </Table>
       </Body>
