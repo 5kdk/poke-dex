@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const remote = axios.create({ baseURL: 'https://pokeapi.co/api/v2/' });
+const baseURL = 'https://pokeapi.co/api/v2/';
+const remote = axios.create({ baseURL });
 
 export interface PokemonListResponseType {
   count: number;
@@ -11,8 +12,10 @@ export interface PokemonListResponseType {
   }[];
 }
 
-export const fetchPokemons = async () => {
-  const response = await remote.get<PokemonListResponseType>('pokemon');
+export const fetchPokemons = async (nextUrl?: string) => {
+  const response = await remote.get<PokemonListResponseType>(
+    nextUrl ? nextUrl.replace(baseURL, '') : 'pokemon'
+  );
 
   return response.data;
 };
@@ -92,7 +95,6 @@ export const fetchPokemonsDetail = async (
 
   const detail = response.data;
   const species = speciesResponse.data;
-  console.log(species);
 
   return {
     id: detail.id,
