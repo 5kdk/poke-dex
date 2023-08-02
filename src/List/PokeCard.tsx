@@ -37,7 +37,7 @@ const PokeCard = (props: PokeCardProps) => {
 
   if (!pokemon) {
     return (
-      <Item>
+      <Item ref={ref}>
         <Header>
           <PokeNameChip name="포켓몬" id={0} color="#ffca09" />
         </Header>
@@ -52,7 +52,7 @@ const PokeCard = (props: PokeCardProps) => {
   }
 
   return (
-    <Item onClick={handleClick} color={pokemon.color} ref={ref}>
+    <Item onClick={handleClick} color={pokemon.color}>
       <Header>
         <PokeNameChip
           name={pokemon.koreanName}
